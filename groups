@@ -2,4 +2,3 @@
 #
 ef39c0458b91a6eba43d1265e40e7a117c3c0328           	saml/lf-releng
 global:Anonymous-Users                             	Anonymous Users
-ldap:cn=lf-releng,ou=Groups,dc=freestandards,dc=org	ldap/lf-releng
