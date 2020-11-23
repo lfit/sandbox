@@ -1,1 +1,1 @@
-Adding new content for newtestfile3.txt
+Adding new content for newtestfile3.txt.
