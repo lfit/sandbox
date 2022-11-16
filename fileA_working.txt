@@ -1,1 +1,0 @@
-This is fileA in working branch of OPS-5G repo in DI2E.
