@@ -2,12 +2,20 @@
 name: hello-world
 
 # yamllint disable-line rule:truthy
-on: create
+on:
+  workflow_dispatch:
+    inputs:
+      change_ref:
+        description: 'Gerrit ref to change'
+        required: true
+        type: string
 
 jobs:
   my-job:
-    if: startsWith('refs/changes', github.ref)
+    if: startsWith('refs/changes', inputs.change_ref)
     runs-on: ubuntu-latest
     steps:
       - name: my-step
-        run: echo "Hello World!"
+        run: echo "Hello World! My change is ${CHANGE_REF}"
+        env:
+          CHANGE_REF: ${{ inputs.change_ref }}
