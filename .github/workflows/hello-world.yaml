@@ -2,7 +2,7 @@
 name: hello-world
 
 # yamllint disable-line rule:truthy
-on: push
+on: create
 
 jobs:
   my-job:
