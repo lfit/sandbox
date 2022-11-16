@@ -1,0 +1,13 @@
+---
+name: hello-world
+
+# yamllint disable-line rule:truthy
+on: push
+
+jobs:
+  my-job:
+    if: startsWith('refs/changes', github.ref)
+    runs-on: ubuntu-latest
+    steps:
+      - name: my-step
+        run: echo "Hello World!"
