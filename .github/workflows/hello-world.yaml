@@ -12,7 +12,6 @@ on:
 
 jobs:
   my-job:
-    if: startsWith('refs/changes', inputs.change_ref)
     runs-on: ubuntu-latest
     steps:
       - name: my-step
