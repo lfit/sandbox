@@ -17,7 +17,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ inputs.change_ref }}
-      - name: my-step
+      - name: hello-world
         run: echo "Hello World! My change is ${CHANGE_REF}"
         env:
           CHANGE_REF: ${{ inputs.change_ref }}
+      - name: change-log
+        run: git log -n1
