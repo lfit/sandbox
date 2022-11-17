@@ -14,6 +14,9 @@ jobs:
   my-job:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.change_ref }}
       - name: my-step
         run: echo "Hello World! My change is ${CHANGE_REF}"
         env:
