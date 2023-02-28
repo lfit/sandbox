@@ -5,8 +5,40 @@ name: verify
 on:
   workflow_dispatch:
     inputs:
-      change_ref:
-        description: 'Gerrit ref to change'
+      GERRIT_BRANCH:
+        description: 'Branch that change is against'
+        required: true
+        type: string
+      GERRIT_CHANGE_ID:
+        description: 'The ID for the change'
+        required: true
+        type: string
+      GERRIT_CHANGE_NUMBER:
+        description: 'The Gerrit number'
+        required: true
+        type: string
+      GERRIT_CHANGE_URL:
+        description: 'URL to the change'
+        required: true
+        type: string
+      GERRIT_EVENT_TYPE:
+        description: 'Type of Gerrit event'
+        required: true
+        type: string
+      GERRIT_PATCHSET_NUMBER:
+        description: 'The patch number for the change'
+        required: true
+        type: string
+      GERRIT_PATCHSET_REVISION:
+        description: 'The revision sha'
+        required: true
+        type: string
+      GERRIT_PROJECT:
+        description: 'Project in Gerrit'
+        required: true
+        type: string
+      GERRIT_REFSPEC:
+        description: 'Gerrit refspec of change'
         required: true
         type: string
 
@@ -16,10 +48,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ inputs.change_ref }}
-      - name: verify
-        run: echo "Hello World! My change is ${CHANGE_REF}"
-        env:
-          CHANGE_REF: ${{ inputs.change_ref }}
+          ref: refs/heads/${{ inputs.GERRIT_BRANCH }}
+      - name: get_change
+        run: git fetch ${{ inputs.GERRIT_REFSPEC }} && git checkout FETCH_HEAD
       - name: change-log
         run: git log -n1
