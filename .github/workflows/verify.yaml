@@ -50,6 +50,6 @@ jobs:
         with:
           ref: refs/heads/${{ inputs.GERRIT_BRANCH }}
       - name: get_change
-        run: git fetch ${{ inputs.GERRIT_REFSPEC }} && git checkout FETCH_HEAD
+        run: git fetch origin ${{ inputs.GERRIT_REFSPEC }} && git checkout FETCH_HEAD
       - name: change-log
         run: git log -n1
