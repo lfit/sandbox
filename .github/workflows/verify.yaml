@@ -46,10 +46,11 @@ jobs:
   my-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: lfit/checkout-gerrit-change
         with:
-          ref: refs/heads/${{ inputs.GERRIT_BRANCH }}
-      - name: get_change
-        run: git fetch origin ${{ inputs.GERRIT_REFSPEC }} && git checkout FETCH_HEAD
+          gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
       - name: change-log
         run: git log -n1
+      - name: change-graph
+        # yamllint disable-line rule:line-length
+        run: git log --graph --pretty=format:'%C(auto,yellow)%h%C(auto,magenta)% G? %C(auto,cyan)%>(13,trunc)%ad %C(auto,green)%<(14,trunc)%aN %C(auto,reset)%s%C(auto)% gD% d'
