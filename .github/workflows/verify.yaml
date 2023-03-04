@@ -46,11 +46,17 @@ jobs:
   my-job:
     runs-on: ubuntu-latest
     steps:
+      # need to delay run time to make sure that replication has finished
+      - name: delay-start
+        run: sleep 10s
+        shell: bash
       - uses: lfit/checkout-gerrit-change-action@v0.1
         with:
           gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
       - name: change-log
         run: git log -n1
+        shell: bash
       - name: change-graph
         # yamllint disable-line rule:line-length
         run: git log --graph --pretty=format:'%C(auto,yellow)%h%C(auto,magenta)% G? %C(auto,cyan)%>(13,trunc)%ad %C(auto,green)%<(14,trunc)%aN %C(auto,reset)%s%C(auto)% gD% d'
+        shell: bash
