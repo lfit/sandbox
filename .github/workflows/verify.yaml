@@ -46,11 +46,7 @@ jobs:
   my-job:
     runs-on: ubuntu-latest
     steps:
-      # need to delay run time to make sure that replication has finished
-      - name: delay-start
-        run: sleep 10s
-        shell: bash
-      - uses: lfit/checkout-gerrit-change-action@v0.1
+      - uses: lfit/checkout-gerrit-change-action@v0.2
         with:
           gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
       - name: change-log
