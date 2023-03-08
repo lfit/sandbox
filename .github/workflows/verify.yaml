@@ -74,4 +74,4 @@ jobs:
           passphrase: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_PASSPHRASE }}
           gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
           gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
-          vote-type: job_status
+          vote-type: ${{ job.status }}
