@@ -75,6 +75,3 @@ jobs:
           gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
           gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
           vote-type: job_status
-          is_success: ${{ success() }}
-          is_failure: ${{ failure() }}
-          is_cancelled: ${{ cancelled() }}
