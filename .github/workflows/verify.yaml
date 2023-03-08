@@ -46,12 +46,12 @@ jobs:
   my-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: lfit/gerrit-review-action@main
+      - uses: lfit/gerrit-review-action@v0.1
         with:
           host: gerrit.linuxfoundation.org
           username: ${{ vars.LFIT_GERRIT_SSH_USER }}
           key: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY }}
-          passphrase: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_PASSPHRASE }}
+          passphrase: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_PASSPRHASE }}
           gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
           gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
           vote-type: clear
@@ -66,7 +66,7 @@ jobs:
         run: git log --graph --pretty=format:'%C(auto,yellow)%h%C(auto,magenta)% G? %C(auto,cyan)%>(13,trunc)%ad %C(auto,green)%<(14,trunc)%aN %C(auto,reset)%s%C(auto)% gD% d'
         shell: bash
       - if: ${{ always() }}
-        uses: lfit/gerrit-review-action@main
+        uses: lfit/gerrit-review-action@v0.1
         with:
           host: gerrit.linuxfoundation.org
           username: ${{ vars.LFIT_GERRIT_SSH_USER }}
