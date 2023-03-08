@@ -50,7 +50,7 @@ jobs:
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: gerrit.linuxfoundation.org
-          port: 24918
+          port: 29418
           username: ${{ secrets.LFIT_GERRIT_SSH_USER }}
           key: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY }}
           passphrase: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_PASSPRHASE }}
@@ -73,7 +73,7 @@ jobs:
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: gerrit.linuxfoundation.org
-          port: 24918
+          port: 29418
           username: ${{ secrets.LFIT_GERRIT_SSH_USER }}
           key: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY }}
           passphrase: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_PASSPRHASE }}
@@ -86,7 +86,7 @@ jobs:
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: gerrit.linuxfoundation.org
-          port: 24918
+          port: 29418
           username: ${{ secrets.LFIT_GERRIT_SSH_USER }}
           key: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY }}
           passphrase: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_PASSPRHASE }}
@@ -99,7 +99,7 @@ jobs:
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: gerrit.linuxfoundation.org
-          port: 24918
+          port: 29418
           username: ${{ secrets.LFIT_GERRIT_SSH_USER }}
           key: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY }}
           passphrase: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_PASSPRHASE }}
