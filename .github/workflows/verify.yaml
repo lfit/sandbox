@@ -51,7 +51,7 @@ jobs:
         with:
           host: gerrit.linuxfoundation.org
           port: 29418
-          username: ${{ secrets.LFIT_GERRIT_SSH_USER }}
+          username: ${{ vars.LFIT_GERRIT_SSH_USER }}
           key: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY }}
           passphrase: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_PASSPRHASE }}
           # yamllint disable rule:line-length
