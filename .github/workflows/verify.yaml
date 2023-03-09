@@ -84,7 +84,7 @@ jobs:
         id: workflow_condition
         with:
           # yamllint disable-line rule:line-length
-          cond: ${{ needs.test-job.result == 'success' && needs.job2.result == 'success' }
+          cond: ${{ needs.test-job.result == 'success' && needs.job2.result == 'success' }}
           if_true: 'success'
           if_false: 'failure'
       - name: Set vote
