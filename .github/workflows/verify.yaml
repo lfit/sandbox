@@ -43,7 +43,7 @@ on:
         type: string
 
 jobs:
-  my-job:
+  test-job:
     runs-on: ubuntu-latest
     steps:
       - uses: lfit/gerrit-review-action@v0.2
@@ -58,6 +58,7 @@ jobs:
       - uses: lfit/checkout-gerrit-change-action@v0.2
         with:
           gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
+          delay: "0s"
       - name: change-log
         run: git log -n1
         shell: bash
@@ -65,7 +66,19 @@ jobs:
         # yamllint disable-line rule:line-length
         run: git log --graph --pretty=format:'%C(auto,yellow)%h%C(auto,magenta)% G? %C(auto,cyan)%>(13,trunc)%ad %C(auto,green)%<(14,trunc)%aN %C(auto,reset)%s%C(auto)% gD% d'
         shell: bash
-      - if: ${{ always() }}
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: test-job
+    steps:
+      - name: failit
+        run: exit 1
+
+  vote:
+    needs: [test-job, job2]
+    steps:
+      - name: Set vote
+        if: ${{ always() }}
         uses: lfit/gerrit-review-action@v0.2
         with:
           host: gerrit.linuxfoundation.org
