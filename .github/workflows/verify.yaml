@@ -76,6 +76,7 @@ jobs:
 
   vote:
     needs: [test-job, job2]
+    runs-on: ubuntu-latest
     steps:
       - name: Set vote
         if: ${{ always() }}
