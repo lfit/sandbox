@@ -79,8 +79,16 @@ jobs:
     needs: [test-job, job2]
     if: ${{ always() }}
     steps:
+      - name: workflow condition
+        uses: haya14busa/action-cond@v1
+        id: workflow_condition
+        with:
+          # yamllint disable-line rule:line-length
+          cond: ${{ needs.test-job.result == 'success' && needs.job2.result == 'success' }
+          if_true: 'success'
+          if_false: 'failure'
       - name: Set vote
-        if: ${{ always() }}
+        # if: ${{ always() }}
         uses: lfit/gerrit-review-action@v0.2
         with:
           host: gerrit.linuxfoundation.org
@@ -89,4 +97,4 @@ jobs:
           passphrase: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_PASSPHRASE }}
           gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
           gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
-          vote-type: ${{ job.status }}
+          vote-type: ${{ steps.workflow_condition.outputs.value }}
