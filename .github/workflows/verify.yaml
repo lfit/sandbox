@@ -80,7 +80,7 @@ jobs:
 
   vote:
     runs-on: ubuntu-latest
-    needs: [test-job, job2]
+    needs: [test-job, gpg]
     if: ${{ always() }}
     steps:
       - uses: technote-space/workflow-conclusion-action@v3
