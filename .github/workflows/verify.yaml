@@ -71,12 +71,12 @@ jobs:
         run: git log --graph --pretty=format:'%C(auto,yellow)%h%C(auto,magenta)% G? %C(auto,cyan)%>(13,trunc)%ad %C(auto,green)%<(14,trunc)%aN %C(auto,reset)%s%C(auto)% gD% d'
         shell: bash
 
-  job2:
+  gpg:
     runs-on: ubuntu-latest
     needs: test-job
     steps:
-      - name: failit
-        run: exit 1
+      - name: gpg version
+        run: gpg --version
 
   vote:
     runs-on: ubuntu-latest
