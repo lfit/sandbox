@@ -62,7 +62,6 @@ jobs:
       - uses: lfit/checkout-gerrit-change-action@v0.2
         with:
           gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
-          delay: "0s"
       - name: change-log
         run: git log -n1
         shell: bash
