@@ -75,7 +75,9 @@ jobs:
     needs: test-job
     steps:
       - name: gpg version
-        run: gpg --version
+        run: |
+          gpg --version
+          which gpg
 
   vote:
     runs-on: ubuntu-latest
