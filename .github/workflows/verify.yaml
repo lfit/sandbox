@@ -78,6 +78,13 @@ jobs:
         run: |
           gpg --version
           which gpg
+          which gpgv
+          which gpg-agent
+          which dirmngr
+          which gpgconf
+      - name: git version
+        run: |
+          git --version
 
   vote:
     runs-on: ubuntu-latest
