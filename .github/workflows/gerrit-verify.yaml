@@ -59,7 +59,7 @@ jobs:
           gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
           gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
           vote-type: clear
-      - uses: lfit/checkout-gerrit-change-action@v0.2
+      - uses: lfit/checkout-gerrit-change-action@main
         with:
           gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
       - name: change-log
