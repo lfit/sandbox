@@ -50,7 +50,7 @@ jobs:
   test-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: lfit/gerrit-review-action@v0.2
+      - uses: lfit/gerrit-review-action@main
         with:
           host: gerrit.linuxfoundation.org
           username: ${{ vars.LFIT_GERRIT_SSH_USER }}
@@ -59,6 +59,7 @@ jobs:
           gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
           gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
           vote-type: clear
+          comment-only: true
       - uses: lfit/checkout-gerrit-change-action@v0.2
         with:
           gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
@@ -85,7 +86,7 @@ jobs:
     steps:
       - uses: technote-space/workflow-conclusion-action@v3
       - name: Set vote
-        uses: lfit/gerrit-review-action@v0.2
+        uses: lfit/gerrit-review-action@main
         with:
           host: gerrit.linuxfoundation.org
           username: ${{ vars.LFIT_GERRIT_SSH_USER }}
@@ -94,3 +95,4 @@ jobs:
           gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
           gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
           vote-type: ${{ env.WORKFLOW_CONCLUSION }}
+          comment-only: true
