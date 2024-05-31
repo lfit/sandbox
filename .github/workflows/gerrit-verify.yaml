@@ -91,7 +91,12 @@ jobs:
     needs: [test-job, gpg]
     if: ${{ always() }}
     steps:
-      - uses: technote-space/workflow-conclusion-action@v3
+      - name: Try new conclusion getter
+        uses: pinguet62/workflow-conclusion@v1.0.0
+        with:
+          workflow_id: ${{ github.run_id }}
+      - name: Get overall conclusion
+        uses: technote-space/workflow-conclusion-action@v3
       - name: Set vote
         uses: lfit/gerrit-review-action@main
         with:
