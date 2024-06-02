@@ -91,13 +91,8 @@ jobs:
     needs: [test-job, gpg]
     if: ${{ always() }}
     steps:
-      - name: Try new conclusion getter
-        uses: pinguet62/workflow-conclusion@v1.0.0
-        with:
-          workflow_id: ${{ github.run_id }}
-          branch: ${{ inputs.GERRIT_BRANCH }}
       - name: Get overall conclusion
-        uses: technote-space/workflow-conclusion-action@v3
+        uses: tykeal/workflow-conclusion-action@node20
       - name: Set vote
         uses: lfit/gerrit-review-action@main
         with:
