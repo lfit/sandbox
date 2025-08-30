@@ -1,0 +1,55 @@
+plugins {
+  id 'java'
+  id 'idea'
+  id 'org.openapi.generator'
+}
+
+dependencies {
+  compileOnly "org.springframework.boot:spring-boot-starter-webflux:$springBootVersion"
+  compileOnly "org.openapitools:openapi-generator:$openapiVersion"
+}
+
+openApiGenerate {
+    generatorName = "java"
+    library = "webclient"
+    inputSpec = "${project.projectDir}/src/api.yaml"
+    outputDir = "${project.buildDir}/openapi"
+    configOptions = [
+      openApiNullable     : "false",
+      dateLibrary         : "java8",
+      serializationLibrary: "jackson",
+      useJakartaEe        : "true",
+    ]
+    typeMappings = [
+            "File": "org.springframework.core.io.buffer.DataBuffer"
+    ]
+    generateApiTests = false
+    generateApiDocumentation = false
+    generateModelTests = false
+    generateModelDocumentation = false
+    invokerPackage = "org.onap.portalng.bff.openapi.client_keycloak"
+    apiPackage = "org.onap.portalng.bff.openapi.client_keycloak.api"
+    modelPackage = "org.onap.portalng.bff.openapi.client_keycloak.model"
+    modelNameSuffix = "KeycloakDto"
+}
+
+compileJava {
+  dependsOn tasks.openApiGenerate
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs += file("$buildDir/openapi/src/main/java")
+    }
+  }
+}
+
+idea {
+  module {
+    generatedSourceDirs += file("$buildDir/openapi/src/main/java")
+  }
+}
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
