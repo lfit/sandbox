@@ -1,0 +1,61 @@
+plugins {
+  id 'java'
+  id 'idea'
+  id 'org.openapi.generator'
+}
+
+dependencies {
+  compileOnly "org.springframework.boot:spring-boot-starter-webflux:$springBootVersion"
+  compileOnly "org.openapitools:openapi-generator:$openapiVersion"
+  compileOnly 'jakarta.validation:jakarta.validation-api:3.1.1'
+
+
+  constraints {
+  }
+}
+
+openApiGenerate {
+  generatorName = "spring"
+  library = "spring-boot"
+  inputSpec = "$projectDir/src/main/resources/static/api.yaml"
+  outputDir = "$buildDir/openapi"
+  configOptions = [
+    hideGenerationTimestamp: "true",
+    openApiNullable: "false",
+    skipDefaultInterface: "true",
+    dateLibrary: "java8",
+    interfaceOnly: "true",
+    useTags: "true",
+    reactive: "true",
+    useSpringBoot3: "true",
+  ]
+  generateApiTests = false
+  generateApiDocumentation = true
+  generateModelTests = false
+  generateModelDocumentation = false
+  invokerPackage = "org.onap.portalng.bff.openapi.server"
+  apiPackage =     "org.onap.portalng.bff.openapi.server.api"
+  modelPackage =   "org.onap.portalng.bff.openapi.server.model"
+  modelNameSuffix = "ApiDto"
+}
+
+compileJava {
+  dependsOn tasks.openApiGenerate
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs += file("$buildDir/openapi/src/main/java")
+    }
+  }
+}
+
+idea {
+  module {
+    generatedSourceDirs += file("$buildDir/openapi/src/main/java")
+  }
+}
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
