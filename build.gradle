@@ -1,0 +1,20 @@
+allprojects {
+  repositories {
+	  mavenCentral()
+  }
+}
+
+ext {
+    // app + lib
+    problemVersion = '0.27.1'
+    problemSpringVersion = '0.29.1'
+    mapStructVersion = '1.6.3'
+    mapStructExtensionsVersion = '1.0.2'
+    logbackVersion = '8.1'
+    lombokVersion = '1.18.36'
+    swaggerV3Version = '2.2.21'
+    lombokMapStructBindingVersion = '0.2.0'
+
+    // app
+    wiremockVersion = '4.0.4'
+}

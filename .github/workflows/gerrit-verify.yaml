@@ -1,106 +1,106 @@
 ---
-name: verify
+name: Gerrit Composed Gradle Verify CLM
 
 # yamllint disable-line rule:truthy
 on:
   workflow_dispatch:
     inputs:
       GERRIT_BRANCH:
-        description: 'Branch that change is against'
+        description: "Branch that change is against"
         required: true
         type: string
       GERRIT_CHANGE_ID:
-        description: 'The ID for the change'
+        description: "The ID for the change"
         required: true
         type: string
       GERRIT_CHANGE_NUMBER:
-        description: 'The Gerrit number'
+        description: "The Gerrit number"
         required: true
         type: string
       GERRIT_CHANGE_URL:
-        description: 'URL to the change'
+        description: "URL to the change"
         required: true
         type: string
       GERRIT_EVENT_TYPE:
-        description: 'Type of Gerrit event'
+        description: "Type of Gerrit event"
         required: true
         type: string
       GERRIT_PATCHSET_NUMBER:
-        description: 'The patch number for the change'
+        description: "The patch number for the change"
         required: true
         type: string
       GERRIT_PATCHSET_REVISION:
-        description: 'The revision sha'
+        description: "The revision sha"
         required: true
         type: string
       GERRIT_PROJECT:
-        description: 'Project in Gerrit'
+        description: "Project in Gerrit"
         required: true
         type: string
       GERRIT_REFSPEC:
-        description: 'Gerrit refspec of change'
+        description: "Gerrit refspec of change"
         required: true
         type: string
 
 concurrency:
-  group: ${{ github.event.inputs.GERRIT_CHANGE_ID || github.run_id }}
+  # yamllint disable-line rule:line-length
+  group: composed-gradle-verify-clm${{ github.workflow }}-${{ github.event.inputs.GERRIT_CHANGE_ID || github.run_id }}
   cancel-in-progress: true
 
 jobs:
-  test-job:
+  prepare:
     runs-on: ubuntu-latest
     steps:
-      - uses: lfit/gerrit-review-action@main
+      - name: Clear votes
+        # yamllint disable-line rule:line-length
+        uses: lfit/gerrit-review-action@7c30179c3c9389545fccb0d458df59879372ae6a  # v0.6
         with:
-          host: ${{ vars.LFIT_GERRIT_SERVER }}
-          username: ${{ vars.LFIT_GERRIT_SSH_USER }}
-          key: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_NP }}
-          known_hosts: ${{ vars.LFIT_GERRIT_KNOWN_HOSTS }}
+          host: ${{ vars.GERRIT_SERVER }}
+          username: ${{ vars.GERRIT_SSH_USER }}
+          key: ${{ secrets.GERRIT_SSH_PRIVKEY }}
+          known_hosts: ${{ vars.GERRIT_KNOWN_HOSTS }}
           gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
           gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
           vote-type: clear
-      - uses: lfit/checkout-gerrit-change-action@main
-        with:
-          gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
-      - name: change-log
-        run: git log -n1
-        shell: bash
-      - name: change-graph
-        # yamllint disable-line rule:line-length
-        run: git log --graph --pretty=format:'%C(auto,yellow)%h%C(auto,magenta)% G? %C(auto,cyan)%>(13,trunc)%ad %C(auto,green)%<(14,trunc)%aN %C(auto,reset)%s%C(auto)% gD% d'
-        shell: bash
+          comment-only: true
+      - name: Allow replication
+        run: sleep 10s
 
-  gpg:
-    runs-on: ubuntu-latest
-    needs: test-job
-    steps:
-      - name: gpg version
-        run: |
-          gpg --version
-          which gpg
-          which gpgv
-          which gpg-agent
-          which dirmngr
-          which gpgconf
-      - name: git version
-        run: |
-          git --version
+  gradle-verify-clm:
+    needs: prepare
+    # yamllint disable-line rule:line-length
+    uses: lfit/releng-reusable-workflows/.github/workflows/composed-gradle-nexus-iq.yaml@main
+    with:
+      GERRIT_BRANCH: ${{ inputs.GERRIT_BRANCH }}
+      GERRIT_CHANGE_ID: ${{ inputs.GERRIT_CHANGE_ID }}
+      GERRIT_CHANGE_NUMBER: ${{ inputs.GERRIT_CHANGE_NUMBER }}
+      GERRIT_CHANGE_URL: ${{ inputs.GERRIT_CHANGE_URL }}
+      GERRIT_EVENT_TYPE: ${{ inputs.GERRIT_EVENT_TYPE }}
+      GERRIT_PATCHSET_NUMBER: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
+      GERRIT_PATCHSET_REVISION: ${{ inputs.GERRIT_PATCHSET_REVISION }}
+      GERRIT_PROJECT: ${{ inputs.GERRIT_PROJECT }}
+      GERRIT_REFSPEC: ${{ inputs.GERRIT_REFSPEC }}
+    secrets:
+      NEXUS_IQ_PASSWORD: ${{ secrets.NEXUS_IQ_PASSWORD }}
 
   vote:
-    runs-on: ubuntu-latest
-    needs: [test-job, gpg]
     if: ${{ always() }}
+    # yamllint enable rule:line-length
+    needs: [prepare, gradle-verify-clm]
+    runs-on: ubuntu-latest
     steps:
-      - name: Get overall conclusion
-        id: get_conclusion
-        uses: im-open/workflow-conclusion@v2.2.3
+      - name: Get conclusion
+        # yamllint disable-line rule:line-length
+        uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5  # v3.0.3
       - name: Set vote
-        uses: lfit/gerrit-review-action@main
+        # yamllint disable-line rule:line-length
+        uses: lfit/gerrit-review-action@7c30179c3c9389545fccb0d458df59879372ae6a  # v0.6
         with:
-          host: gerrit.linuxfoundation.org
-          username: ${{ vars.LFIT_GERRIT_SSH_USER }}
-          key: ${{ secrets.LFIT_GERRIT_SSH_PRIVKEY_NP }}
-          known_hosts: ${{ vars.LFIT_GERRIT_KNOWN_HOSTS }}
+          host: ${{ vars.GERRIT_SERVER }}
+          username: ${{ vars.GERRIT_SSH_USER }}
+          key: ${{ secrets.GERRIT_SSH_PRIVKEY }}
+          known_hosts: ${{ vars.GERRIT_KNOWN_HOSTS }}
           gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
           gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
           vote-type: ${{ env.WORKFLOW_CONCLUSION }}
+          comment-only: true
