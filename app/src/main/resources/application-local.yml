@@ -1,0 +1,33 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            token-uri: http://localhost:8080/realms/ONAP/protocol/openid-connect/token
+            jwk-set-uri: http://localhost:8080/realms/ONAP/protocol/openid-connect/certs
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: bff
+            client-secret: pKOuVH1bwRZoNzp5P5t4GV8CqcCJYVtr
+            authorization-grant-type: client_credentials
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/ONAP/protocol/openid-connect/certs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+bff:
+  realm: ONAP
+  preferences-url: http://localhost:9001
+  history-url: http://localhost:9002
+  keycloak-url: http://localhost:8080/
+
+logging:
+  level:
+    root: debug
