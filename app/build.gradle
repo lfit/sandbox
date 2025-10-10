@@ -1,0 +1,84 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot'
+	id 'io.spring.dependency-management'
+    id 'com.gorylenko.gradle-git-properties' // commit information in actuator
+    id 'jacoco'                              // code coverage
+    id 'com.diffplug.spotless'
+}
+
+group = 'org.onap.portalng'
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+dependencies {
+	implementation project(':openapi:server')
+    implementation project(':openapi:client-history')
+    implementation project(':openapi:client-preferences')
+    implementation project(':openapi:client-keycloak')
+	implementation project(':lib')
+
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+    implementation "org.zalando:problem-spring-webflux:$problemSpringVersion"
+    implementation "org.zalando:jackson-datatype-problem:$problemVersion"
+
+    implementation "org.mapstruct:mapstruct:$mapStructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
+    implementation "org.mapstruct.extensions.spring:mapstruct-spring-annotations:$mapStructExtensionsVersion"
+    implementation "org.mapstruct.extensions.spring:mapstruct-spring-extensions:$mapStructExtensionsVersion"
+
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "net.logstash.logback:logstash-logback-encoder:$logbackVersion"
+    compileOnly             "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor     "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:$lombokMapStructBindingVersion"
+    testCompileOnly         "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock:$wiremockVersion"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.rest-assured:rest-assured'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+test.finalizedBy jacocoTestReport
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+}
+
+spotless {
+    java {
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        googleJavaFormat('1.15.0')
+    }
+}
+tasks.withType(JavaCompile) {
+    dependsOn 'spotlessApply'
+}
