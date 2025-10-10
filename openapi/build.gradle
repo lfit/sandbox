@@ -1,0 +1,11 @@
+plugins {
+  id 'java'
+}
+
+ext {
+  openapiVersion = '7.4.0'
+  springBootVersion = '3.2.3'
+}
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
