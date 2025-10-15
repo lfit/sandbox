@@ -125,7 +125,7 @@ jobs:
             echo "Error: sha1sum binary not found in PATH ❌"; exit 1
           fi
           SHA1SUM=$(echo -n ${{ env.GERRIT_PROJECT }} | "$SHA1SUM_CMD" | awk '{print $1}')
-          echo "Credential sha1sum: $SHA1SUM" >> $GITHUB_OUTPUT
+          echo "SHA1SUM=$SHA1SUM" >> $GITHUB_OUTPUT
           echo "Credential sha1sum: $SHA1SUM" >> $GITHUB_STEP_SUMMARY
 
   check-secrets:
