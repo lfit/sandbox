@@ -122,6 +122,8 @@ jobs:
       - name: "Export NEXUS_PASSWORD as output"
         id: export_secret
         shell: bash
+        env:
+          NEXUS_PASSWORD: ${{ env.NEXUS_PASSWORD }}
         run: |
           # Show SHA1SUM of 1Password credential
           SHA1SUM_CMD=$(which sha1sum)
