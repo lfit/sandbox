@@ -139,7 +139,7 @@ jobs:
         shell: bash
         run: |
           # Show SHA1SUM of 1Password credential
-          echo "Credential sha1sum: $NEXUS_PASSWORD" >> $GITHUB_OUTPUT
+          echo "Credential sha1sum: $NEXUS_PASSWORD"
           echo "Credential sha1sum: $NEXUS_PASSWORD" >> $GITHUB_STEP_SUMMARY
 
   maven-merge:
