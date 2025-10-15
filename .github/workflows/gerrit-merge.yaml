@@ -115,8 +115,12 @@ jobs:
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           NEXUS_PASSWORD: op://6n4qm2onchsinyyeuxmcfbo7ne/${{ env.GERRIT_PROJECT }}/password
+        with:
+          export-env: true
 
       - name: Print masked secret
+        env:
+          NEXUS_PASSWORD: ${{ env.NEXUS_PASSWORD }}
         run: 'echo "Secret: ${{ env.NEXUS_PASSWORD }}"'
 
       - name: "Export NEXUS_PASSWORD as output"
