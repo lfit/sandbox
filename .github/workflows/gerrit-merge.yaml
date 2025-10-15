@@ -84,7 +84,7 @@ jobs:
     needs: [notify, sanitize]
     runs-on: ubuntu-latest
     outputs:
-      nexus_password: ${{ steps.load_secrets.outputs.NEXUS_PASSWORD }}
+      nexus_password: ${{ steps.export_secret.outputs.NEXUS_PASSWORD }}
     steps:
       # yamllint disable-line rule:line-length
       - uses: lfit/checkout-gerrit-change-action@54d751e8bd167bc91f7d665dabe33fae87aaaa63 # v0.9
@@ -116,7 +116,11 @@ jobs:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           NEXUS_PASSWORD: op://6n4qm2onchsinyyeuxmcfbo7ne/${{ env.GERRIT_PROJECT }}/password
 
-      - name: "Show SHA1SUM of 1Password credential"
+      - name: Print masked secret
+        run: 'echo "Secret: ${{ env.NEXUS_PASSWORD }}"'
+
+      - name: "Export NEXUS_PASSWORD as output"
+        id: export_secret
         shell: bash
         run: |
           # Show SHA1SUM of 1Password credential
@@ -124,9 +128,9 @@ jobs:
           if [ ! -x "$SHA1SUM_CMD" ]; then
             echo "Error: sha1sum binary not found in PATH ❌"; exit 1
           fi
-          SHA1SUM=$(echo -n ${{ steps.load_secrets.outputs.NEXUS_PASSWORD }} \
-            | "$SHA1SUM_CMD" | awk '{print $1}')
+          SHA1SUM=$(echo -n "${NEXUS_PASSWORD}" | "$SHA1SUM_CMD" | awk '{print $1}')
           echo "SHA1SUM=$SHA1SUM" >> $GITHUB_OUTPUT
+          echo "NEXUS_PASSWORD=${NEXUS_PASSWORD}" >> $GITHUB_OUTPUT
           echo "Credential sha1sum: $SHA1SUM" >> $GITHUB_STEP_SUMMARY
 
   check-secrets:
@@ -137,10 +141,12 @@ jobs:
     steps:
       - name: "Check extracted secret availability from second job"
         shell: bash
+        env:
+          NEXUS_PASSWORD: ${{ needs.load-secrets.outputs.nexus_password }}
         run: |
           # Show SHA1SUM of 1Password credential
-          echo "Credential sha1sum: $NEXUS_PASSWORD"
-          echo "Credential sha1sum: $NEXUS_PASSWORD" >> $GITHUB_STEP_SUMMARY
+          echo "Credential sha1sum: ${{ env.NEXUS_PASSWORD }}"
+          echo "Credential sha1sum: ${{ env.NEXUS_PASSWORD }}" >> $GITHUB_STEP_SUMMARY
 
   maven-merge:
     needs: [notify, sanitize, load-secrets]
