@@ -144,7 +144,7 @@ jobs:
   maven-merge:
     needs: [notify, sanitize, load-secrets]
     # yamllint disable-line rule:line-length
-    uses: lfit/releng-reusable-workflows/.github/workflows/compose-make-merge.yaml@f318aaac9f4fce73a8059fe95ba9080833e018c2
+    uses: lfit/releng-reusable-workflows/.github/workflows/compose-make-merge.yaml@353a06e737c950cb297b3138784729ebd24e4861
     secrets:
       NEXUS_PASSWORD: ${{ needs.load-secrets.outputs.nexus_password }}
     with:
