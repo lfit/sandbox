@@ -10,6 +10,8 @@ on:
     secrets:
       VAULT_MAPPING_JSON:
         required: true
+      OP_SERVICE_ACCOUNT_TOKEN:
+        required: true
     inputs:
       GERRIT_CHANGE_ID:
         description: "The ID for the change"
@@ -65,6 +67,7 @@ jobs:
         uses: modeseven-lfreleng-actions/credential-load-action@initial-update
         with:
           vault_mapping_json: ${{ secrets.VAULT_MAPPING_JSON }}
+          op_service_account_token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           gerrit_refspec: ${{ inputs.GERRIT_REFSPEC }}
           gerrit_url: ${{ vars.GERRIT_URL }}
 

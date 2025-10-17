@@ -86,6 +86,7 @@ jobs:
     uses: ./.github/workflows/compose-make-maven-merge.yaml
     secrets:                                                 # forward secrets
       VAULT_MAPPING_JSON: ${{ secrets.VAULT_MAPPING_JSON }}
+      OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
     with:
       GERRIT_BRANCH: ${{ inputs.GERRIT_BRANCH }}
       GERRIT_CHANGE_ID: ${{ inputs.GERRIT_CHANGE_ID }}
