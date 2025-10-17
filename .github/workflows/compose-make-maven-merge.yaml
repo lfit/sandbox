@@ -65,7 +65,7 @@ jobs:
         uses: modeseven-lfreleng-actions/credential-load-action@main
         with:
           vault_mapping_json: ${{ secrets.VAULT_MAPPING_JSON }}
-          gerrit_refspec: ${{ inputs.gerrit_refspec }}
+          gerrit_refspec: ${{ inputs.GERRIT_REFSPEC }}
           gerrit_url: ${{ vars.GERRIT_URL }}
 
       - name: Run Maven
