@@ -85,7 +85,7 @@ jobs:
     # yamllint disable-line rule:line-length
     uses: ./.github/workflows/compose-make-maven-merge.yaml
     secrets:                                                 # forward secrets
-      vault_mapping_json: ${{ secrets.vault_mapping_json }}
+      VAULT_MAPPING_JSON: ${{ secrets.VAULT_MAPPING_JSON }}
     with:
       GERRIT_BRANCH: ${{ inputs.GERRIT_BRANCH }}
       GERRIT_CHANGE_ID: ${{ inputs.GERRIT_CHANGE_ID }}

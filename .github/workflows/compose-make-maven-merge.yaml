@@ -8,7 +8,7 @@ name: Compose Maven Merge
 on:
   workflow_call:
     secrets:
-      CREDENTIAL_VAULT_JSON:
+      VAULT_MAPPING_JSON:
         required: true
     inputs:
       GERRIT_CHANGE_ID:
@@ -64,7 +64,7 @@ jobs:
       - name: "Load project/repository credentials"
         uses: modeseven-lfreleng-actions/credential-load-action@main
         with:
-          vault_mapping_json: ${{ secrets.CREDENTIAL_VAULT_JSON }}
+          vault_mapping_json: ${{ secrets.VAULT_MAPPING_JSON }}
           gerrit_refspec: ${{ inputs.gerrit_refspec }}
           gerrit_url: ${{ vars.GERRIT_URL }}
 
