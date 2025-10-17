@@ -80,86 +80,12 @@ jobs:
         env:
           GERRIT_PROJECT: ${{ inputs.GERRIT_PROJECT }}
 
-  load-secrets:
-    needs: [notify, sanitize]
-    runs-on: ubuntu-latest
-    outputs:
-      nexus_password: ${{ steps.export_secret.outputs.NEXUS_PASSWORD }}
-    steps:
-      # yamllint disable-line rule:line-length
-      - uses: lfit/checkout-gerrit-change-action@54d751e8bd167bc91f7d665dabe33fae87aaaa63 # v0.9
-        with:
-          gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
-          gerrit-url: ${{ vars.GERRIT_URL }}
-          delay: "10s" # Allow time for GitHub mirroring
-
-      - name: "Extract Gerrit project from .gitreview"
-        shell: bash
-        run: |
-          # Extract Gerrit project from .gitreview
-          GERRIT_PROJECT=$(grep 'project=' .gitreview | awk -F= '{print $2}')
-          EXIT_CODE=$?
-          if [ $EXIT_CODE -ne 0 ] || [ -z "$GERRIT_PROJECT" ]; then
-            echo "Error: Unable to extract Gerrit project from .gitreview"
-            exit 1
-          else
-            echo "GERRIT_PROJECT=$GERRIT_PROJECT" >> $GITHUB_ENV
-            echo "GERRIT_PROJECT=$GERRIT_PROJECT" >> $GITHUB_OUTPUT
-            echo "Extracted Gerrit project name: $GERRIT_PROJECT" >> $GITHUB_STEP_SUMMARY
-          fi
-
-      - name: Load secrets from 1Password
-        id: load_secrets
-        # yamllint disable-line rule:line-length
-        uses: 1password/load-secrets-action@13f58eec611f8e5db52ec16247f58c508398f3e6 # v3.0.0
-        env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          NEXUS_PASSWORD: op://6n4qm2onchsinyyeuxmcfbo7ne/${{ env.GERRIT_PROJECT }}/password
-        with:
-          export-env: true
-
-      - name: Print masked secret
-        env:
-          NEXUS_PASSWORD: ${{ env.NEXUS_PASSWORD }}
-        run: 'echo "Secret: ${{ env.NEXUS_PASSWORD }}"'
-
-      - name: "Export NEXUS_PASSWORD as output"
-        id: export_secret
-        shell: bash
-        env:
-          NEXUS_PASSWORD: ${{ env.NEXUS_PASSWORD }}
-        run: |
-          # Show SHA1SUM of 1Password credential
-          SHA1SUM_CMD=$(which sha1sum)
-          if [ ! -x "$SHA1SUM_CMD" ]; then
-            echo "Error: sha1sum binary not found in PATH ❌"; exit 1
-          fi
-          SHA1SUM=$(echo -n "${NEXUS_PASSWORD}" | "$SHA1SUM_CMD" | awk '{print $1}')
-          echo "SHA1SUM=$SHA1SUM" >> $GITHUB_OUTPUT
-          echo "NEXUS_PASSWORD=${NEXUS_PASSWORD}" >> $GITHUB_OUTPUT
-          echo "Credential sha1sum: $SHA1SUM" >> $GITHUB_STEP_SUMMARY
-
-  check-secrets:
-    needs: [notify, sanitize, load-secrets]
-    runs-on: ubuntu-latest
-    env:
-      NEXUS_PASSWORD: ${{ needs.load-secrets.outputs.nexus_password }}
-    steps:
-      - name: "Check extracted secret availability from second job"
-        shell: bash
-        env:
-          NEXUS_PASSWORD: ${{ needs.load-secrets.outputs.nexus_password }}
-        run: |
-          # Show SHA1SUM of 1Password credential
-          echo "Credential sha1sum: ${{ env.NEXUS_PASSWORD }}"
-          echo "Credential sha1sum: ${{ env.NEXUS_PASSWORD }}" >> $GITHUB_STEP_SUMMARY
-
   maven-merge:
     needs: [notify, sanitize, load-secrets]
     # yamllint disable-line rule:line-length
-    uses: lfit/releng-reusable-workflows/.github/workflows/compose-make-merge.yaml@f318aaac9f4fce73a8059fe95ba9080833e018c2
-    secrets:
-      NEXUS_PASSWORD: ${{ needs.load-secrets.outputs.nexus_password }}
+    uses: ./.github/workflows/compose-make-maven-merge.yaml
+    secrets:                                                 # forward secrets
+      vault_mapping_json: ${{ secrets.vault_mapping_json }}
     with:
       GERRIT_BRANCH: ${{ inputs.GERRIT_BRANCH }}
       GERRIT_CHANGE_ID: ${{ inputs.GERRIT_CHANGE_ID }}
@@ -170,7 +96,7 @@ jobs:
 
   report-status:
     if: ${{ always() }}
-    needs: [notify, sanitize, load-secrets, maven-merge]
+    needs: [notify, sanitize, load-secrets, maven-merge, check-secrets]
     runs-on: ubuntu-latest
     steps:
       - name: Get workflow conclusion
