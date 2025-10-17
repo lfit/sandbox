@@ -91,7 +91,7 @@ jobs:
         with:
           gerrit-refspec: ${{ inputs.GERRIT_REFSPEC }}
           gerrit-url: ${{ vars.GERRIT_URL }}
-          delay: "10s"  # Allow time for GitHub mirroring
+          delay: "10s" # Allow time for GitHub mirroring
 
       - name: "Extract Gerrit project from .gitreview"
         shell: bash
