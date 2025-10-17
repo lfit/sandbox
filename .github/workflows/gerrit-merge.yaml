@@ -96,7 +96,7 @@ jobs:
 
   report-status:
     if: ${{ always() }}
-    needs: [notify, sanitize, load-secrets, maven-merge, check-secrets]
+    needs: [notify, sanitize, maven-merge]
     runs-on: ubuntu-latest
     steps:
       - name: Get workflow conclusion
