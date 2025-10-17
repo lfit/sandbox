@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025 The Linux Foundation
 
-name: Compose Maven Merge
+# compose-make-maven-merge.yaml
+name: Compose Make Maven Merge
 
 # yamllint disable-line rule:truthy
 on:
@@ -68,8 +69,6 @@ jobs:
         with:
           vault_mapping_json: ${{ secrets.VAULT_MAPPING_JSON }}
           op_service_account_token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-          gerrit_refspec: ${{ inputs.GERRIT_REFSPEC }}
-          gerrit_url: ${{ vars.GERRIT_URL }}
 
       - name: Run Maven
         # yamllint disable-line rule:line-length
