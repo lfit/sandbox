@@ -81,7 +81,7 @@ jobs:
           GERRIT_PROJECT: ${{ inputs.GERRIT_PROJECT }}
 
   maven-merge:
-    needs: [notify, sanitize, load-secrets]
+    needs: [notify, sanitize]
     # yamllint disable-line rule:line-length
     uses: ./.github/workflows/compose-make-maven-merge.yaml
     secrets:                                                 # forward secrets
