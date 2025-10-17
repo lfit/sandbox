@@ -75,7 +75,7 @@ jobs:
         # yamllint disable-line rule:line-length
         uses: lfreleng-actions/maven-make-build-action@59d078ca61a7bba9a46649a615094300b8e4c2dd # v0.1.0
         env:
-          CREDENTIAL: ${{ env.CREDENTIAL }}
+          NEXUS_PASSWORD: ${{ env.CREDENTIAL }}
         with:
           jdk-version: ${{ inputs.JDK_VERSION }}
           mvn-version: ${{ inputs.MVN_VERSION }}
