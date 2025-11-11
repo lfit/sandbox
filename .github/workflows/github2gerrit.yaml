@@ -2,10 +2,24 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025 The Linux Foundation
 
-name: 'GitHub2Gerrit Python'
+name: 'GitHub2Gerrit'
 
 # yamllint disable-line rule:truthy
 on:
+  # Handle pull requests - submit to Gerrit
+  pull_request_target:
+    types: [opened, reopened, edited, synchronize, closed]
+    branches:
+      - main
+      - master
+
+  # Handle pushes from Gerrit - close corresponding GitHub PRs
+  push:
+    branches:
+      - main
+      - master
+
+  # Manual workflow dispatch for testing
   workflow_dispatch:
     inputs:
       preserve_github_prs:
@@ -19,21 +33,22 @@ on:
         default: false
         type: boolean
 
-  pull_request_target:
-    types: [opened, reopened, edited, synchronize, closed]
-    branches:
-      - main
-      - master
-
 concurrency:
-  group: "${{ github.workflow }}-${{ github.run_id }}"
+  group: "${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
   github2gerrit:
-    name: 'GitHub2Gerrit Python'
+    name: 'GitHub2Gerrit'
     runs-on: ubuntu-latest
-    if: github.event.action != 'closed' || github.event.pull_request.merged == true
+    # Run on:
+    # - PR events (except closed without merge)
+    # - Push events (when Gerrit syncs back)
+    # - Manual workflow dispatch
+    if: |
+      (github.event_name == 'pull_request_target' && (github.event.action != 'closed' || github.event.pull_request.merged == true)) ||
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch'
     permissions:
       contents: read
       pull-requests: write
@@ -54,14 +69,18 @@ jobs:
           fetch-depth: 10
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
-      - name: 'Run GitHub2Gerrit Action'
+      - name: 'Run GitHub2Gerrit'
         # yamllint disable-line rule:line-length
         uses: lfreleng-actions/github2gerrit-action@f3ec169f35720fd2169110f55cc91e68f99f3a73  # v0.1.20
         with:
           USE_PR_AS_COMMIT: true
-          ALLOW_DUPLICATES: ${{ inputs.allow_duplicates }}
-          PRESERVE_GITHUB_PRS: ${{ inputs.preserve_github_prs }}
+          VERBOSE: true
+
+          # Workflow-specific inputs (only used for pull_request_target/workflow_dispatch)
+          ALLOW_DUPLICATES: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_duplicates || false }}
+          PRESERVE_GITHUB_PRS: ${{ github.event_name == 'workflow_dispatch' && inputs.preserve_github_prs || false }}
           ISSUE_ID_LOOKUP_JSON: ${{ vars.ISSUE_ID_LOOKUP_JSON }}
+
+          # Authentication (required for all contexts)
           GERRIT_SSH_PRIVKEY_G2G: ${{ secrets.GERRIT_SSH_PRIVKEY_G2G }}
           GERRIT_KNOWN_HOSTS: ${{ vars.GERRIT_KNOWN_HOSTS }}
-          VERBOSE: true
