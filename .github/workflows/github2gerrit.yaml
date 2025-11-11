@@ -84,6 +84,7 @@ jobs:
         # uses: lfreleng-actions/github2gerrit-action@f3ec169f35720fd2169110f55cc91e68f99f3a73  # v0.1.20
         uses: modeseven-lfreleng-actions/github2gerrit-action@update-action  # Test new feature
         with:
+          USE_LOCAL_ACTION: true  # Use branch code for testing, not PyPI
           USE_PR_AS_COMMIT: true
           VERBOSE: true
 
