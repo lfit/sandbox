@@ -34,8 +34,18 @@ on:
         type: boolean
 
 concurrency:
-  group: "${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}"
-  cancel-in-progress: true
+  # Separate concurrency groups for different event types to prevent interference:
+  # - PR events: Group by PR number, allow cancellation of older commits
+  # - Push events: Group by run_id (unique), never cancel
+  # - Workflow dispatch: Group by run_id (unique), never cancel
+  group: >-
+    ${{
+      github.event_name == 'pull_request_target' && format('{0}-pr-{1}', github.workflow, github.event.pull_request.number) ||
+      format('{0}-{1}-{2}', github.workflow, github.event_name, github.run_id)
+    }}
+  # Only cancel in-progress runs for PR events (newer commit supersedes older)
+  # Never cancel push events (each Gerrit merge should process independently)
+  cancel-in-progress: ${{ github.event_name == 'pull_request_target' }}
 
 jobs:
   github2gerrit:
