@@ -1,0 +1,6 @@
+Verified+1: LFIT Required GHA <releng+lfit-required-gha@linuxfoundation.org>
+Submitted-by: Matthew Watkins <mwatkins@linuxfoundation.org>
+Submitted-at: Thu, 04 Dec 2025 11:36:37 +0000
+Reviewed-on: https://gerrit.linuxfoundation.org/infra/c/sandbox/+/73887
+Project: sandbox
+Branch: refs/heads/master
