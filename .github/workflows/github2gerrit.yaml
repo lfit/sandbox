@@ -89,7 +89,7 @@ jobs:
 
           # Workflow-specific inputs (only used for pull_request_target/workflow_dispatch)
           ALLOW_DUPLICATES: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_duplicates || false }}
-          PRESERVE_GITHUB_PRS: ${{ github.event_name == 'workflow_dispatch' && inputs.preserve_github_prs || false }}
+          PRESERVE_GITHUB_PRS: ${{ github.event_name == 'workflow_dispatch' && inputs.preserve_github_prs || true }}
           ISSUE_ID_LOOKUP_JSON: ${{ vars.ISSUE_ID_LOOKUP_JSON }}
 
           # Authentication (required for all contexts)
