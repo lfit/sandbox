@@ -74,7 +74,7 @@ jobs:
         uses: modeseven-lfreleng-actions/repository-metadata-action@gerrit-metadata  # Testing
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          generate_summary: 'false'
+          github_summary: 'false'
           artifact_upload: 'true'
           artifact_formats: 'json'
 
