@@ -137,14 +137,6 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs: [notify]
-    # Run on:
-    # - PR events (except closed without merge)
-    # - Push events (when Gerrit syncs back)
-    # - Manual workflow dispatch
-    if: |
-      (github.event_name == 'pull_request_target' && (github.event.action != 'closed' || github.event.pull_request.merged == true)) ||
-      github.event_name == 'push' ||
-      github.event_name == 'workflow_dispatch'
     permissions:
       contents: read
       pull-requests: write
