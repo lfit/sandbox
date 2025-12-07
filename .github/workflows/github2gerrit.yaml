@@ -176,7 +176,7 @@ jobs:
         with:
           USE_LOCAL_ACTION: true  # Use branch code for testing, not PyPI
           USE_PR_AS_COMMIT: true
-          VERBOSE: true
+          VERBOSE: false
 
           # Workflow-specific inputs (only used for pull_request_target/workflow_dispatch)
           ALLOW_DUPLICATES: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_duplicates || false }}
