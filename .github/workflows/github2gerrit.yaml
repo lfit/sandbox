@@ -14,6 +14,7 @@ on:
       - master
 
   # Handle pushes from Gerrit - close corresponding GitHub PRs
+  # Note: These are now handled by gerrit_to_platform triggers
   # push:
   #   branches:
   #     - main
@@ -62,6 +63,16 @@ on:
         required: false
         default: false
         type: boolean
+      allow_duplicates:
+        description: "Allow submitting duplicate changes without error"
+        required: false
+        default: true
+        type: boolean
+      preserve_github_prs:
+        description: "Do not close GitHub PRs after pushing to Gerrit"
+        required: false
+        default: true
+        type: boolean
 
 concurrency:
   # Separate concurrency groups for different event types to prevent interference:
@@ -87,7 +98,7 @@ jobs:
     timeout-minutes: 5
     steps:
       # yamllint disable-line rule:line-length
-      - uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2  # v2.13.3
+      - uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
@@ -114,7 +125,7 @@ jobs:
     steps:
       # Harden the runner used by this workflow
       # yamllint disable-line rule:line-length
-      - uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2  # v2.13.3
+      - uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
@@ -145,7 +156,7 @@ jobs:
     steps:
       # Harden the runner used by this workflow
       # yamllint disable-line rule:line-length
-      - uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2  # v2.13.3
+      - uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         name: 'Harden runner'
         with:
           egress-policy: audit
@@ -194,7 +205,7 @@ jobs:
     steps:
       # Harden the runner used by this workflow
       # yamllint disable-line rule:line-length
-      - uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2  # v2.13.2
+      - uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
