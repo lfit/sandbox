@@ -185,6 +185,8 @@ jobs:
           GERRIT_PROJECT: ${{ github.event.inputs.GERRIT_PROJECT || '' }}
           GERRIT_REFSPEC: ${{ github.event.inputs.GERRIT_REFSPEC || '' }}
         with:
+          # Only for testing in LF Gerrit/sandbox; remove AUTOMATION_ONLY from production workflows
+          AUTOMATION_ONLY: "false"
           USE_LOCAL_ACTION: true  # Use branch code for testing, not PyPI
           USE_PR_AS_COMMIT: true
           VERBOSE: false
