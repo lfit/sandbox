@@ -6,7 +6,8 @@ name: 'GitHub2Gerrit'
 
 # yamllint disable-line rule:truthy
 on:
-  # Handle pull requests - submit to Gerrit
+  # Submit new Github pull requests to Gerrit
+  # When pull request is modified, update Gerrit change
   pull_request_target:
     types: [opened, reopened, edited, synchronize, closed]
     branches:
@@ -14,7 +15,7 @@ on:
       - master
 
   # Pushes from Gerrit use gerrit_to_platform triggers
-  # These use the workflow_dispatch invocation below
+  # These use the workflow_dispatch method/invocation
   workflow_dispatch:
     inputs:
       GERRIT_BRANCH:
@@ -187,7 +188,7 @@ jobs:
           VERBOSE: false
 
           # Workflow-specific inputs (only used for pull_request_target/workflow_dispatch)
-          ALLOW_DUPLICATES: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_duplicates || false }}
+          ALLOW_DUPLICATES: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_duplicates || true }}
           PRESERVE_GITHUB_PRS: ${{ github.event_name == 'workflow_dispatch' && inputs.preserve_github_prs || true }}
           ISSUE_ID_LOOKUP_JSON: ${{ vars.ISSUE_ID_LOOKUP_JSON }}
 
