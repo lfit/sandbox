@@ -1,0 +1,63 @@
+{
+  "comments": [],
+  "submitRequirementResults": [
+    {
+      "submitRequirement": {
+        "name": "Code-Review",
+        "description": {},
+        "applicabilityExpression": {
+          "value": {
+            "expressionString": "is:true"
+          }
+        },
+        "submittabilityExpression": {
+          "expressionString": "is:true"
+        },
+        "overrideExpression": {},
+        "allowOverrideInChildProjects": true
+      },
+      "applicabilityExpressionResult": {
+        "value": {"expression":{"expressionString":"is:true"},"status":"PASS","errorMessage":{"value":null},"passingAtoms":["is:true"],"failingAtoms":[]}
+      },
+      "submittabilityExpressionResult": {
+        "value": {"expression":{"expressionString":"is:true"},"status":"PASS","errorMessage":{"value":null},"passingAtoms":["is:true"],"failingAtoms":[]}
+      },
+      "overrideExpressionResult": {},
+      "patchSetCommitId": "5b550f2b7c200f5a94aaa6ef511c51581c0bc10d",
+      "legacy": {
+        "value": false
+      },
+      "forced": {},
+      "hidden": {}
+    },
+    {
+      "submitRequirement": {
+        "name": "Verified",
+        "description": {},
+        "applicabilityExpression": {
+          "value": {
+            "expressionString": "is:true"
+          }
+        },
+        "submittabilityExpression": {
+          "expressionString": "is:true"
+        },
+        "overrideExpression": {},
+        "allowOverrideInChildProjects": true
+      },
+      "applicabilityExpressionResult": {
+        "value": {"expression":{"expressionString":"is:true"},"status":"PASS","errorMessage":{"value":null},"passingAtoms":["is:true"],"failingAtoms":[]}
+      },
+      "submittabilityExpressionResult": {
+        "value": {"expression":{"expressionString":"is:true"},"status":"PASS","errorMessage":{"value":null},"passingAtoms":["is:true"],"failingAtoms":[]}
+      },
+      "overrideExpressionResult": {},
+      "patchSetCommitId": "5b550f2b7c200f5a94aaa6ef511c51581c0bc10d",
+      "legacy": {
+        "value": false
+      },
+      "forced": {},
+      "hidden": {}
+    }
+  ]
+}
